@@ -1,42 +1,54 @@
+class Cell
+  attr_accessor :char, :position
+  
+  def initialize(char, position)
+    @char, @position = char, position
+    @char = "0" if @char == " "
+  end
+  
+  def bomb?
+    @char == "*"
+  end
+end
+
 class MineSweeper
   attr_reader :map
   
   def initialize(mapOfBombs)
-    @mapOfBombs = mapOfBombs
-    @openMap = ""
+    @mapOfCells = parseStringMap(mapOfBombs)
   end
   
   def map
-    @mapOfBombs.split("").each_with_index do |cell, i|
-      if bomb? cell
-        @openMap[i] = "*"
-      else
-        verify_bombs_in_the_neighborhood i
-        
-      end
+    @mapOfCells.each do |cell|
+      verify_bombs_in_the_neighborhood(cell) unless cell.char == '*'
     end
     
-    @openMap
+    @mapOfCells.map { |cell| cell.char }.join
   end
   
-  def verify_bombs_in_the_neighborhood i
-    if(i > 0)
-      show_if_cell_has_bomb(@mapOfBombs[i - 1], i)
-    elsif(i < @mapOfBombs.size)
-      show_if_cell_has_bomb(@mapOfBombs[i + 1], i)
+  def parseStringMap(mapOfBombs)
+    openMap = []
+    mapOfBombs.split("").each_with_index do |char, position|
+      openMap << Cell.new(char, position)
+    end
+    openMap
+  end
+  
+  def verify_bombs_in_the_neighborhood cell
+    if @mapOfCells.size > 1
+      if(cell.position > 0)
+        show_if_cell_has_bomb(@mapOfCells[cell.position - 1], cell)
+      elsif(cell.position < @mapOfCells.size)
+        show_if_cell_has_bomb(@mapOfCells[cell.position + 1], cell)
+      end
     end
   end
   
-  def show_if_cell_has_bomb(cell, i)
-    if bomb? cell
-      @openMap[i] = "1"
+  def show_if_cell_has_bomb(neighbor_cell, cell)
+    if neighbor_cell.bomb?
+      cell.char = "1"
     else
-      @openMap[i] = "0"
+      cell.char = "0"
     end
   end
-  
-  def bomb?(cell)
-    cell == "*"
-  end
-  
 end
