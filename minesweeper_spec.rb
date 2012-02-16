@@ -21,8 +21,18 @@ describe MineSweeper do
     game.map.should == "00"
   end
   
-  it "identifies cell with neighbor bomb" do
+  it "identifies cell with neighbor bomb on the left side" do
     game = MineSweeper.new("* ")
     game.map.should == "*1"
+  end
+  
+  it "identifies cell with neighbor bomb on the right side" do
+    game = MineSweeper.new(" *")
+    game.map.should == "1*"
+  end
+  
+  it "identifies cell with two neighbor bombs" do
+    game = MineSweeper.new(" * ")
+    game.map.should == "1*1"
   end
 end
