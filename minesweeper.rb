@@ -11,15 +11,20 @@ class MineSweeper
       if bomb? cell
         @openMap[i] = "*"
       else
-        if(i > 0)
-          show_if_cell_has_bomb(@mapOfBombs[i - 1], i)
-        elsif(i < @mapOfBombs.size)
-          show_if_cell_has_bomb(@mapOfBombs[i + 1], i)
-        end
+        verify_bombs_in_the_neighborhood i
+        
       end
     end
     
     @openMap
+  end
+  
+  def verify_bombs_in_the_neighborhood i
+    if(i > 0)
+      show_if_cell_has_bomb(@mapOfBombs[i - 1], i)
+    elsif(i < @mapOfBombs.size)
+      show_if_cell_has_bomb(@mapOfBombs[i + 1], i)
+    end
   end
   
   def show_if_cell_has_bomb(cell, i)
